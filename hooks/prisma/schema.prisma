@@ -1,0 +1,66 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        Int  @id @default(autoincrement())
+  name      String
+  email     String
+  password  String
+  zaps      Zap[]
+}
+
+model Zap{
+  id        String @id @default(uuid())
+  name      String 
+  userId    Int
+  createdAt DateTime @default(now())
+  user  User @relation(fields: [userId],references: [id])
+  trigger   Trigger?
+  actions   Action[]
+}
+
+model Trigger {
+   id String @id @default(uuid())
+   zapId String @unique
+   availableTriggerId String
+   zap Zap @relation(fields: [zapId],references: [id])
+   type AvailableTriggers @relation(fields: [availableTriggerId],references: [id])
+}
+
+model AvailableTriggers{
+  id String @id @default(uuid())
+  name String
+  triggers Trigger[]
+}
+
+model Action{
+  id String @id @default(uuid())
+  zapId String
+  availableActionId String
+  actionId String
+  zap Zap @relation(fields: [actionId],references: [id])
+  type  AvailableAction  @relation(fields: [availableActionId], references: [id])
+}
+
+model AvailableAction {
+  id      String @id @default(uuid())
+  name    String
+  actions Action[]
+}
+
+
+// enum TRIGGER{
+//   Webhook
+//   Github
+// }

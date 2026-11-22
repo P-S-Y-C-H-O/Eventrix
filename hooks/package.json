@@ -1,0 +1,19 @@
+{
+  "name": "hooks",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "license": "MIT",
+  "devDependencies": {
+    "prisma": "7",
+    "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "@prisma/client": "7",
+    "@types/express": "^5.0.6",
+    "express": "^5.3.0"
+  },
+  "scripts": {
+    "postinstall": "prisma skills sync || exit 0"
+  }
+}
