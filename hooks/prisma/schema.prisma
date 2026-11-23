@@ -28,14 +28,15 @@ model Zap{
   user  User @relation(fields: [userId],references: [id])
   trigger   Trigger?
   actions   Action[]
+  zapRun    ZapRun[]
 }
 
 model Trigger {
-   id String @id @default(uuid())
-   zapId String @unique
+   id     String @id @default(uuid())
+   zapId  String @unique
    availableTriggerId String
-   zap Zap @relation(fields: [zapId],references: [id])
-   type AvailableTriggers @relation(fields: [availableTriggerId],references: [id])
+   zap      Zap @relation(fields: [zapId],references: [id])
+   type     AvailableTriggers @relation(fields: [availableTriggerId],references: [id])
 }
 
 model AvailableTriggers{
@@ -59,6 +60,20 @@ model AvailableAction {
   actions Action[]
 }
 
+model ZapRun {
+  id      String @id @default(uuid())
+  zapId   String @unique
+  createdAt DateTime @default(now())
+  metadata Json
+  zap     Zap @relation(fields: [zapId],references: [id])
+  zapRunOutbox ZapRunOutbox?
+}
+
+model ZapRunOutbox {
+  id String @id @default(uuid())
+  zapRunId String @unique
+  zapRun ZapRun @relation(fields: [zapRunId],references: [id])
+}
 
 // enum TRIGGER{
 //   Webhook
